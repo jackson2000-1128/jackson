@@ -66,9 +66,29 @@
                             </dl>
 
                             <div style="margin-top: 10px;">
+<!--                                <div class="btn-group">-->
+<!--                                    <th:block th:if="${session.type!=null && session.type != '01'}">-->
+<!--                                        <select name="applyDate" id="applyDate" class="form-control" lay-verify="required" style="margin: 20px 10px 0 0;">-->
+<!--                                            <option value="">请选择时间段</option>-->
+<!--                                            <option value="8:00-10:00">8:00-10:00</option>-->
+<!--                                            <option value="10:00-12:00">10:00-12:00</option>-->
+<!--                                            <option value="12:00-14:00">12:00-14:00</option>-->
+<!--                                            <option value="14:00-16:00">14:00-16:00</option>-->
+<!--                                            <option value="16:00-18:00">16:00-18:00</option>-->
+<!--                                            <option value="18:00-20:00">18:00-20:00</option>-->
+<!--                                            <option value="20:00-22:00">20:00-22:00</option>-->
+<!--                                        </select>-->
+<!--                                        <div class="m-t-md">-->
+<!--                                            <button onclick="purchaseInfo()"  class="btn btn-primary btn-sm" style="color: #ffffff;"><i class="fa fa-cart-plus"></i> 预约</button>-->
+<!--                                        </div>-->
+<!--                                    </th:block>-->
+<!--                                </div>-->
                                 <div class="btn-group">
                                     <th:block th:if="${session.type!=null && session.type != '01'}">
-                                        <select name="applyDate" id="applyDate" class="form-control" lay-verify="required" style="margin: 20px 10px 0 0;">
+                                        <!-- 日期选择框 -->
+                                        <input type="date" name="applyDate" id="applyDate" class="form-control" lay-verify="required" style="margin: 20px 10px 0 0;">
+                                        <!-- 时间段选择框 -->
+                                        <select name="applyTime" id="applyTime" class="form-control" lay-verify="required" style="margin: 20px 10px 0 0;">
                                             <option value="">请选择时间段</option>
                                             <option value="8:00-10:00">8:00-10:00</option>
                                             <option value="10:00-12:00">10:00-12:00</option>
@@ -117,8 +137,9 @@
 
     function purchaseInfo() {
         let sid = '[[${id}]]';
+        let applyTime = document.getElementById("applyTime").value;
         let applyDate = document.getElementById("applyDate").value;
-        if(applyDate==null || applyDate==''){
+        if(applyDate==null || applyDate=='' || applyTime==null || applyTime==''){
             parent.layer.msg("请选择时间段！");
             return;
         }
@@ -126,7 +147,7 @@
             url:"/apply/add",
             type:"post",
             dataType:"json",
-            data: {'sid':sid,'applyDate':applyDate},
+            data: {'sid':sid,'applyDate':applyDate ,'applyTime':applyTime},
             success:function(data){
                 parent.layer.msg(data.msg);
             }

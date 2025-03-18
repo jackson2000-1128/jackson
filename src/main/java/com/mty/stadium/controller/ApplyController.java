@@ -115,6 +115,7 @@ public class ApplyController {
         Map mp = new HashMap();
         mp.put("sid",apply.getSid());
         mp.put("applyDate",apply.getApplyDate());
+        mp.put("applyTime", apply.getApplyTime());
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
         String time = sf.format(date);
         mp.put("time",time);

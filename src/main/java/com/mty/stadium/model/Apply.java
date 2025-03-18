@@ -7,6 +7,7 @@ public class Apply{
     private String sid;
     private String uid;
     private String applyDate;
+    private String applyTime;
     private String status;
     private java.util.Date createTime;
 
@@ -62,6 +63,10 @@ public class Apply{
     public String getApplyDate() {
        return this.applyDate;
     }
+
+    public String getApplyTime() { return applyTime;}
+    public void setApplyTime(String applyTime) { this.applyTime = applyTime;}
+
     public void setStatus(String value) {
         this.status = value;
     }
