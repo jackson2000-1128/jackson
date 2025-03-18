@@ -96,6 +96,26 @@ public class ApplyController {
     @ResponseBody
     public JsonData add(Apply apply, HttpSession session){
         Date date = new Date();
+
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String today = sdf.format(now);
+
+        // 验证预约日期是否为当天以后
+        try {
+            Date applyDate = sdf.parse(apply.getApplyDate());
+            Date todayDate = sdf.parse(today);
+            if (!applyDate.after(todayDate)) {
+                return JsonData.fail("只能预约当天以后的日期！");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return JsonData.fail("预约日期格式错误！");
+        }
+
+
+
         String type = (String)session.getAttribute("type");
         if(type!=null && !type.equals("01")){
             User user =  (User)session.getAttribute("userInfo");

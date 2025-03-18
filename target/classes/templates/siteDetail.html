@@ -86,7 +86,7 @@
                                 <div class="btn-group">
                                     <th:block th:if="${session.type!=null && session.type != '01'}">
                                         <!-- 日期选择框 -->
-                                        <input type="date" name="applyDate" id="applyDate" class="form-control" lay-verify="required" style="margin: 20px 10px 0 0;">
+                                        <input type="date" name="applyDate" id="applyDate" class="form-control" lay-verify="required" style="margin: 20px 10px 0 0;" min="[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]">
                                         <!-- 时间段选择框 -->
                                         <select name="applyTime" id="applyTime" class="form-control" lay-verify="required" style="margin: 20px 10px 0 0;">
                                             <option value="">请选择时间段</option>
