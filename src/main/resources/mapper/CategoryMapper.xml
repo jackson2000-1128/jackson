@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mty.stadium.mapper.CategoryMapper" >
+
+    <resultMap id="BaseResultMap" type="com.mty.stadium.model.Category">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        name,
+        remark,
+        create_time
+    </sql>
+
+    <!--条件查询-->
+    <select id="selectByCondition" resultMap="BaseResultMap" parameterType="com.mty.stadium.model.Category">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM category
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and id = #{id}
+        </if>
+        <if test="name != null and name != '' ">
+            and name like concat(concat('%',#{name}),'%')
+        </if>
+        <if test="remark != null and remark != '' ">
+            and remark = #{remark}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and create_time = #{createTime}
+        </if>
+        order by create_time desc
+    </select>
+
+
+    <!--添加-->
+    <insert id="addByCondition" parameterType="com.mty.stadium.model.Category" keyProperty="id" useGeneratedKeys="true">
+    insert into category (
+        name,
+        remark,
+        create_time
+    )values(
+        #{name},
+        #{remark},
+        #{createTime}
+    )
+    </insert>
+
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+    delete from category where id=#{id}
+    </delete>
+
+
+    <!--根据ID查询-->
+    <select id="selectById" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from category where id=#{id}
+    </select>
+
+
+    <!--修改-->
+    <update id="updateById" parameterType="com.mty.stadium.model.Category">
+    update category
+    <set>
+        <if test="name != null and name != '' ">
+            name = #{name},
+        </if>
+        <if test="remark != null and remark != '' ">
+            remark = #{remark},
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            create_time = #{createTime},
+        </if>
+    </set>
+    where id = #{id}
+    </update>
+
+
+    <!--查询全部-->
+    <select id="findAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from category
+    order by create_time desc
+    </select>
+
+
+    <!--按照Map条件查询-->
+    <select id="queryFilter" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List" />
+    from category
+    where 1=1
+    <if test="id != null and id != '' ">
+        and id = #{id}
+    </if>
+    <if test="name != null and name != '' ">
+        and name = #{name}
+    </if>
+    <if test="remark != null and remark != '' ">
+        and remark = #{remark}
+    </if>
+    <if test="createTime != null and createTime != '' ">
+        and create_time = #{createTime}
+    </if>
+    order by create_time desc
+    </select>
+
+</mapper>

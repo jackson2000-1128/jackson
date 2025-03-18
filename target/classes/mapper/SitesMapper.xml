@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mty.stadium.mapper.SitesMapper" >
+
+    <resultMap id="BaseResultMap" type="com.mty.stadium.model.Sites">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="image" jdbcType="VARCHAR" property="image" />
+        <result column="sid" jdbcType="VARCHAR" property="sid" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="start_time" jdbcType="VARCHAR" property="startTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        image,
+        sid,
+        name,
+        address,
+        start_time,
+        create_time
+    </sql>
+
+    <!--条件查询-->
+    <select id="selectByCondition" resultType="com.mty.stadium.model.Sites" parameterType="com.mty.stadium.model.Sites">
+        SELECT
+        s.id,
+        s.image,
+        s.sid,
+        s.name,
+        s.address,
+        s.start_time startTime,
+        s.create_time createTime,
+        sd.name sdname
+        FROM sites s left join stadium sd on s.sid = sd.id
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and s.id = #{id}
+        </if>
+        <if test="image != null and image != '' ">
+            and s.image = #{image}
+        </if>
+        <if test="sid != null and sid != '' ">
+            and s.sid = #{sid}
+        </if>
+        <if test="name != null and name != '' ">
+            and s.name like concat(concat('%',#{name}),'%')
+        </if>
+        <if test="address != null and address != '' ">
+            and s.address = #{address}
+        </if>
+        <if test="startTime != null and startTime != '' ">
+            and s.start_time = #{startTime}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and s.create_time = #{createTime}
+        </if>
+        order by s.create_time desc
+    </select>
+
+
+    <!--添加-->
+    <insert id="addByCondition" parameterType="com.mty.stadium.model.Sites" keyProperty="id" useGeneratedKeys="true">
+    insert into sites (
+        image,
+        sid,
+        name,
+        address,
+        start_time,
+        create_time
+    )values(
+        #{image},
+        #{sid},
+        #{name},
+        #{address},
+        #{startTime},
+        #{createTime}
+    )
+    </insert>
+
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+    delete from sites where id=#{id}
+    </delete>
+
+
+    <!--根据ID查询-->
+    <select id="selectById" resultType="com.mty.stadium.model.Sites" >
+        SELECT
+        s.id,
+        s.image,
+        s.sid,
+        s.name,
+        s.address,
+        s.start_time startTime,
+        s.create_time createTime,
+        sd.name sdname
+        FROM sites s left join stadium sd on s.sid = sd.id
+        WHERE 1=1
+        and s.id=#{id}
+    </select>
+
+
+    <!--修改-->
+    <update id="updateById" parameterType="com.mty.stadium.model.Sites">
+    update sites
+    <set>
+        <if test="image != null and image != '' ">
+            image = #{image},
+        </if>
+        <if test="sid != null and sid != '' ">
+            sid = #{sid},
+        </if>
+        <if test="name != null and name != '' ">
+            name = #{name},
+        </if>
+        <if test="address != null and address != '' ">
+            address = #{address},
+        </if>
+        <if test="startTime != null and startTime != '' ">
+            start_time = #{startTime},
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            create_time = #{createTime},
+        </if>
+    </set>
+    where id = #{id}
+    </update>
+
+
+    <!--查询全部-->
+    <select id="findAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sites
+    order by create_time desc
+    </select>
+
+
+    <!--按照Map条件查询-->
+    <select id="queryFilter" resultType="com.mty.stadium.model.Sites" parameterType="map">
+        SELECT
+        s.id,
+        s.image,
+        s.sid,
+        s.name,
+        s.address,
+        s.start_time startTime,
+        s.create_time createTime,
+        sd.name sdname
+        FROM sites s left join stadium sd on s.sid = sd.id
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and s.id = #{id}
+        </if>
+        <if test="image != null and image != '' ">
+            and s.image = #{image}
+        </if>
+        <if test="sid != null and sid != '' ">
+            and s.sid = #{sid}
+        </if>
+        <if test="name != null and name != '' ">
+            and s.name like concat(concat('%',#{name}),'%')
+        </if>
+        <if test="address != null and address != '' ">
+            and s.address = #{address}
+        </if>
+        <if test="startTime != null and startTime != '' ">
+            and s.start_time = #{startTime}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and s.create_time = #{createTime}
+        </if>
+        order by s.create_time desc
+        <if test="limit==1">
+           limit 0,5
+        </if>
+    </select>
+
+</mapper>

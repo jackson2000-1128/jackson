@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body class="landing-page no-skin-config">
+<div class="navbar-wrapper" th:fragment="topbar">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-expand-md navbar-scroll" role="navigation">
+        <div class="container">
+            <a href="front/" style="font-size: 24px;font-weight: 600;color: #676a84;">高校场馆预订系统</a>
+            <div class="navbar-header page-scroll">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse justify-content-end" id="navbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="category"><a class="nav-link page-scroll" href="/front/">首页</a></li>
+                    <li><a class="nav-link page-scroll" href="/front/site">场地</a></li>
+                    <li><a class="nav-link page-scroll" href="/front/equip">器材</a></li>
+                    <th:block th:if="${session.userInfo!=null}">
+                        <li><a class="nav-link page-scroll" href="/index">个人中心</a></li>
+                        <li><a class="nav-link page-scroll" href="/logout">退出</a></li>
+                    </th:block>
+                    <th:block th:if="${session.userInfo==null}">
+                        <li><a class="nav-link page-scroll" href="/login">登录</a></li>
+                        <li><a class="nav-link page-scroll" href="/register">注册</a></li>
+                    </th:block>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+</div>
+
+</body>
+</html>

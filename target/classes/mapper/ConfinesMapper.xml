@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mty.stadium.mapper.ConfinesMapper" >
+
+    <resultMap id="BaseResultMap" type="com.mty.stadium.model.Confines">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="sid" jdbcType="VARCHAR" property="sid" />
+        <result column="apply_date" jdbcType="VARCHAR" property="applyDate" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        sid,
+        apply_date,
+        create_time
+    </sql>
+
+    <!--条件查询-->
+    <select id="selectByCondition" resultType="com.mty.stadium.model.Confines" parameterType="com.mty.stadium.model.Confines">
+        SELECT
+        c.id,
+        c.sid,
+        c.apply_date applyDate,
+        c.create_time createTime,
+        sd.name sdname,
+        s.name sname
+        FROM confines c left join sites s on c.sid = s.id left join stadium sd on s.sid = sd.id
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and c.id = #{id}
+        </if>
+        <if test="sid != null and sid != '' ">
+            and c.sid = #{sid}
+        </if>
+        <if test="sname != null and sname != '' ">
+            and s.name like concat(concat('%',#{sname}),'%')
+        </if>
+        <if test="applyDate != null and applyDate != '' ">
+            and c.apply_date = #{applyDate}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and c.create_time = #{createTime}
+        </if>
+        order by c.create_time desc
+    </select>
+
+
+    <!--添加-->
+    <insert id="addByCondition" parameterType="com.mty.stadium.model.Confines" keyProperty="id" useGeneratedKeys="true">
+    insert into confines (
+        sid,
+        apply_date,
+        create_time
+    )values(
+        #{sid},
+        #{applyDate},
+        #{createTime}
+    )
+    </insert>
+
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+    delete from confines where id=#{id}
+    </delete>
+
+
+    <!--根据ID查询-->
+    <select id="selectById" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from confines where id=#{id}
+    </select>
+
+
+    <!--修改-->
+    <update id="updateById" parameterType="com.mty.stadium.model.Confines">
+    update confines
+    <set>
+        <if test="sid != null and sid != '' ">
+            sid = #{sid},
+        </if>
+        <if test="applyDate != null and applyDate != '' ">
+            apply_date = #{applyDate},
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            create_time = #{createTime},
+        </if>
+    </set>
+    where id = #{id}
+    </update>
+
+
+    <!--查询全部-->
+    <select id="findAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from confines
+    order by create_time desc
+    </select>
+
+
+    <!--按照Map条件查询-->
+    <select id="queryFilter" resultType="com.mty.stadium.model.Confines" parameterType="map">
+        SELECT
+        c.id,
+        c.sid,
+        c.apply_date applyDate,
+        c.create_time createTime,
+        sd.name sdname,
+        s.name sname
+        FROM confines c left join sites s on c.sid = s.id left join stadium sd on s.sid = sd.id
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and c.id = #{id}
+        </if>
+        <if test="sid != null and sid != '' ">
+            and c.sid = #{sid}
+        </if>
+        <if test="applyDate != null and applyDate != '' ">
+            and c.apply_date = #{applyDate}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and c.create_time = #{createTime}
+        </if>
+        order by c.create_time desc
+    </select>
+
+</mapper>

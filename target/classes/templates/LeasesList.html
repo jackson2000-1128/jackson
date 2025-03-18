@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <base th:href="${#request.getContextPath()}+'/'">
+    <link rel="stylesheet" href="static/layui/css/layui.css"  media="all">
+</head>
+<style>
+    .searchdiv{
+        background: #fff;
+        border-radius: 6px;margin-top: 10px;
+        box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+        padding: 10px;
+    }
+    .layui-layer-shade{
+        background-color:unset !important;
+    }
+</style>
+
+<body style="background-color: #f3f3f4;">
+    <div class="searchdiv">
+        <form class="layui-form" id="searhFrom">
+            <div class="layui-row layui-form-item">
+
+                <div class="layui-col-xs3">
+                    <label class="layui-form-label">器材：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ename" placeholder="请输入器材名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-xs3" style="padding-left:20px; ">
+                    <button type="button" class="layui-btn" id="btn_query">查询</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="searchdiv">
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+    </div>
+
+
+    <div id="editModel" style="display: none">
+        <form class="layui-form" id="editform" style="padding: 15px 30px 15px 0px;" action="">
+
+            <input type="hidden" name="id" id="id">
+            <input type="hidden" name="num" id="num">
+            <input type="hidden" name="eid" id="eid">
+            <div class="layui-form-item">
+                <label class="layui-form-label">归还数量:</label>
+                <div class="layui-input-block">
+                    <input type="number" name="gnum" lay-verify="required" class="layui-input" id="gnum" >
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="editSubmit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+<script src="static/layui/layui.all.js" charset="utf-8"></script>
+<script>
+
+    !function(){
+        var table = layui.table;
+        var $ = layui.jquery,layer = layui.layer;
+        var form = layui.form;
+
+
+        //第一个实例
+        var tableIns = table.render({
+            elem: '#test'
+            ,height: 500
+            ,where: {}
+            ,url: '/leases/list' //数据接口
+            ,page: true //开启分页
+            ,cols: [
+                [ //表头
+                    {field: 'uname', title: '用户', fixed: 'center'},
+                    {field: 'ename', title: '器材', fixed: 'center'},
+                    {field: 'lendDate', title: '租借日期', fixed: 'center'},
+                    {field: 'num', title: '租借数量', fixed: 'center'},
+                    {field: 'returnDate', title: '归还日期', fixed: 'center',
+                        templet:function (d) {
+                            if(d.returnDate==null || d.returnDate==''){
+                                return "暂未归还";
+                            }else{
+                                return d.returnDate;
+                            }
+                        }
+                    },
+                    {field: 'gnum', title: '归还数量', fixed: 'center',
+                        templet:function (d) {
+                            if(d.gnum==null || d.gnum==''){
+                                return "暂未归还";
+                            }else{
+                                return d.gnum;
+                            }
+                        }
+                    },
+                    {field: 'status', title: '状态', fixed: 'center',
+                        templet:function (d) {
+                            if(d.status=='01'){
+                                return '<button type="button" class="layui-btn layui-btn-normal layui-btn-xs">租借中</button>';
+                            }
+                            if(d.status=='02'){
+                                return '<button type="button" class="layui-btn layui-btn-warning layui-btn-xs">已归还</button>';
+                            }
+                        }
+                    },
+                    {field: 'createTime', title: '创建时间', fixed: 'center'},
+                    {fixed: 'right', title:'操作', width:230,
+                        templet:function (d) {
+                            var type= '[[${session.type}]]';
+                            if(type=="01"){
+                                let del = '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
+                                return del;
+                            }else{
+                                if(d.status=='01'){
+                                    let del = '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
+                                    let edit = '<a class="layui-btn layui-btn-xs" lay-event="edit">归还</a>';
+                                    return edit+del;
+                                }else{
+                                    let del = '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
+                                    return del;
+                                }
+                            }
+
+                        }
+                    }
+                ]
+            ]
+        });
+
+        /**
+         * 查询按钮事件
+         * **/
+        $("#btn_query").click(function(){
+            tableIns.reload({
+                where:{
+                    //对应查询条件
+                      uid:$("input[name=uid]").val(),
+                      ename:$("input[name=ename]").val(),
+                      status:$("input[name=status]").val(),
+                },page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            })
+        });
+
+        /**
+         * 监听表格操作
+         *
+         * **/
+        var editwindow ;
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                top.layer.confirm('确定要删除吗', function(index){
+                    $.ajax({
+                        url:"/leases/del",
+                        type:"post",
+                        data:{id:data.id},
+                        success:function(data){
+                            if(data.ret){
+                                obj.del();
+                                parent.layer.close(index);
+                                parent.layer.msg("删除成功!")
+                            }
+                        }
+                    })
+
+                });
+            } else if(obj.event === 'edit'){
+
+                editwindow = layer.open({
+                    type:1,
+                    title:'归还',
+                    area: ['500px', '300px'],
+                    content:$("#editModel"),
+                    success: function() { }
+                });
+                document.getElementById("id").value = data.id;
+                document.getElementById("num").value = data.num;
+                document.getElementById("eid").value = data.eid;
+                layui.form.on('submit(editSubmit)', function(data){
+                    let num = document.getElementById("num").value;
+                    let gnum = document.getElementById("gnum").value;
+                    if(parseInt(gnum)>parseInt(num)){
+                        parent.layer.msg("归还数量不能大于租借数量");
+                        return
+                    }
+                    $.ajax({
+                        url:"/leases/guihuan",
+                        type:"post",
+                        dataType:"json",
+                        data: $("#editform").serialize(),
+                        success:function(data){
+                            parent.layer.msg(data.msg);
+                            if(data.ret){
+                                layer.close(editwindow);
+                                tableIns.reload({
+                                    where: {}
+                                    ,page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+
+            }
+        });
+
+
+
+    }();
+</script>
+</body>
+
+</html>

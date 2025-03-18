@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mty.stadium.mapper.MessageMapper" >
+
+    <resultMap id="BaseResultMap" type="com.mty.stadium.model.Message">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="uid" jdbcType="VARCHAR" property="uid" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="reply" jdbcType="VARCHAR" property="reply" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        uid,
+        content,
+        reply,
+        create_time
+    </sql>
+
+    <!--条件查询-->
+    <select id="selectByCondition" resultType="com.mty.stadium.model.Message" parameterType="com.mty.stadium.model.Message">
+        SELECT
+        m.id,
+        m.uid,
+        m.content,
+        m.reply,
+        m.create_time createTime,
+        u.realname uname
+        FROM message m left join user u on m.uid = u.id
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and m.id = #{id}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and m.uid = #{uid}
+        </if>
+        <if test="content != null and content != '' ">
+            and m.content like concat(concat('%',#{content}),'%')
+        </if>
+        <if test="reply != null and reply != '' ">
+            and m.reply = #{reply}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and m.create_time = #{createTime}
+        </if>
+        order by m.create_time desc
+    </select>
+
+
+    <!--添加-->
+    <insert id="addByCondition" parameterType="com.mty.stadium.model.Message" keyProperty="id" useGeneratedKeys="true">
+    insert into message (
+        uid,
+        content,
+        reply,
+        create_time
+    )values(
+        #{uid},
+        #{content},
+        #{reply},
+        #{createTime}
+    )
+    </insert>
+
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+    delete from message where id=#{id}
+    </delete>
+
+
+    <!--根据ID查询-->
+    <select id="selectById" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from message where id=#{id}
+    </select>
+
+
+    <!--修改-->
+    <update id="updateById" parameterType="com.mty.stadium.model.Message">
+    update message
+    <set>
+        <if test="uid != null and uid != '' ">
+            uid = #{uid},
+        </if>
+        <if test="content != null and content != '' ">
+            content = #{content},
+        </if>
+        <if test="reply != null and reply != '' ">
+            reply = #{reply},
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            create_time = #{createTime},
+        </if>
+    </set>
+    where id = #{id}
+    </update>
+
+
+    <!--查询全部-->
+    <select id="findAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from message
+    order by create_time desc
+    </select>
+
+
+    <!--按照Map条件查询-->
+    <select id="queryFilter" resultType="com.mty.stadium.model.Message" parameterType="map">
+        SELECT
+        m.id,
+        m.uid,
+        m.content,
+        m.reply,
+        m.create_time createTime,
+        u.realname uname
+        FROM message m left join user u on m.uid = u.id
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and m.id = #{id}
+        </if>
+        <if test="uid != null and uid != '' ">
+            and m.uid = #{uid}
+        </if>
+        <if test="content != null and content != '' ">
+            and m.content = #{content}
+        </if>
+        <if test="reply != null and reply != '' ">
+            and m.reply = #{reply}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and m.create_time = #{createTime}
+        </if>
+        order by m.create_time desc
+    </select>
+
+</mapper>

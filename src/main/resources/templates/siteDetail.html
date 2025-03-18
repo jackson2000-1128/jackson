@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <base th:href="${#request.getContextPath()}+'/'">
+    <title>详情</title>
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/animate.css" rel="stylesheet">
+    <link href="static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="static/css/linecons.css" rel="stylesheet">
+    <link href="static/plugins/slider-pro/css/slider-pro.min.css" rel="stylesheet">
+    <link href="static/plugins/owlcarousel/css/owl.carousel.min.css" rel="stylesheet">
+    <link href="static/plugins/owlcarousel/css/owl.theme.default.min.css" rel="stylesheet">
+    <link href="static/css/responsive.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/layui/css/layui.css"  media="all">
+    <style>
+        .wrapper-content{
+            padding: 100px 10px 0;
+        }
+        .landing-page .btn-primary{
+            color: #ffffff;
+        }
+        .product-images{
+            margin:unset;
+        }
+        .btn-primary{
+
+        }
+    </style>
+</head>
+<body class="landing-page no-skin-config" style="background-color: #f3f3f4;">
+
+<div th:replace="base/layout::topbar"></div>
+
+<div class="wrapper wrapper-content  animated fadeInRight article">
+
+    <div class="row justify-content-md-center">
+        <div class="col-lg-8">
+
+            <div class="ibox product-detail">
+                <div class="ibox-content">
+                    <div class="row" style="min-height: 370px;">
+                        <div class="col-md-5">
+                            <div class="product-images">
+                                <div>
+                                    <img alt="image" style="width: 100%;" th:src="${site.image}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <h2 class="font-bold m-b-xs" th:text="${site.name}"></h2>
+                            <hr>
+                            <h4 style="margin-top: 30px;" th:text="'位置：'+${site.address}"></h4>
+                            <h4 style="margin-top: 30px;" th:text="'开放时间：'+${site.startTime}"></h4>
+                            <dl class="small m-t-md" >
+                                <dd th:text="'所属场馆：'+${site.sdname}"></dd>
+                            </dl>
+                            <dl class="small m-t-md" >
+                                <dd th:text="${'上架时间：'+#dates.format(site.createTime, 'yyyy-MM-dd HH:mm:ss')}"></dd>
+                            </dl>
+
+                            <div style="margin-top: 10px;">
+                                <div class="btn-group">
+                                    <th:block th:if="${session.type!=null && session.type != '01'}">
+                                        <select name="applyDate" id="applyDate" class="form-control" lay-verify="required" style="margin: 20px 10px 0 0;">
+                                            <option value="">请选择时间段</option>
+                                            <option value="8:00-10:00">8:00-10:00</option>
+                                            <option value="10:00-12:00">10:00-12:00</option>
+                                            <option value="12:00-14:00">12:00-14:00</option>
+                                            <option value="14:00-16:00">14:00-16:00</option>
+                                            <option value="16:00-18:00">16:00-18:00</option>
+                                            <option value="18:00-20:00">18:00-20:00</option>
+                                            <option value="20:00-22:00">20:00-22:00</option>
+                                        </select>
+                                        <div class="m-t-md">
+                                            <button onclick="purchaseInfo()"  class="btn btn-primary btn-sm" style="color: #ffffff;"><i class="fa fa-cart-plus"></i> 预约</button>
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+<!-- Mainly scripts -->
+<script src="static/js/jquery-3.1.1.min.js"></script>
+<script src="static/js/popper.min.js"></script>
+<script src="static/js/bootstrap.js"></script>
+<script src="static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="static/js/plugins/pace/pace.min.js"></script>
+<script src="static/js/inspinia.js"></script>
+<script src="static/layui/layui.all.js" charset="utf-8"></script>
+<script>
+    $(function(){
+        var $ = layui.jquery,layer = layui.layer;
+    });
+
+    function purchaseInfo() {
+        let sid = '[[${id}]]';
+        let applyDate = document.getElementById("applyDate").value;
+        if(applyDate==null || applyDate==''){
+            parent.layer.msg("请选择时间段！");
+            return;
+        }
+        $.ajax({
+            url:"/apply/add",
+            type:"post",
+            dataType:"json",
+            data: {'sid':sid,'applyDate':applyDate},
+            success:function(data){
+                parent.layer.msg(data.msg);
+            }
+        });
+    }
+</script>
+</body>
+</html>

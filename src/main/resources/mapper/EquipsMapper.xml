@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mty.stadium.mapper.EquipsMapper" >
+
+    <resultMap id="BaseResultMap" type="com.mty.stadium.model.Equips">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="cid" jdbcType="VARCHAR" property="cid" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="num" jdbcType="INTEGER" property="num" />
+        <result column="purpose" jdbcType="VARCHAR" property="purpose" />
+        <result column="image" jdbcType="VARCHAR" property="image" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        cid,
+        image,
+        name,
+        num,
+        purpose,
+        create_time
+    </sql>
+
+    <!--条件查询-->
+    <select id="selectByCondition" resultType="com.mty.stadium.model.Equips" parameterType="com.mty.stadium.model.Equips">
+        SELECT
+        e.id,
+        e.cid,
+        e.image,
+        e.name,
+        e.num,
+        e.purpose,
+        e.create_time createTime,
+        c.name cname
+        FROM equips e left join category c on e.cid = c.id
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and e.id = #{id}
+        </if>
+        <if test="cid != null and cid != '' ">
+            and e.cid = #{cid}
+        </if>
+        <if test="name != null and name != '' ">
+            and e.name like concat(concat('%',#{name}),'%')
+        </if>
+        <if test="num != null and num != '' ">
+            and e.num = #{num}
+        </if>
+        <if test="purpose != null and purpose != '' ">
+            and e.purpose = #{purpose}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and e.create_time = #{createTime}
+        </if>
+        order by e.create_time desc
+    </select>
+
+
+    <!--添加-->
+    <insert id="addByCondition" parameterType="com.mty.stadium.model.Equips" keyProperty="id" useGeneratedKeys="true">
+    insert into equips (
+        cid,
+        image,
+        name,
+        num,
+        purpose,
+        create_time
+    )values(
+        #{cid},
+        #{image},
+        #{name},
+        #{num},
+        #{purpose},
+        #{createTime}
+    )
+    </insert>
+
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+    delete from equips where id=#{id}
+    </delete>
+
+
+    <!--根据ID查询-->
+    <select id="selectById" resultType="com.mty.stadium.model.Equips" >
+    SELECT
+    e.id,
+    e.cid,
+    e.image,
+    e.name,
+    e.num,
+    e.purpose,
+    e.create_time createTime,
+    c.name cname
+    FROM equips e left join category c on e.cid = c.id
+    where e.id=#{id}
+    </select>
+
+
+    <!--修改-->
+    <update id="updateById" parameterType="com.mty.stadium.model.Equips">
+    update equips
+    <set>
+        <if test="cid != null and cid != '' ">
+            cid = #{cid},
+        </if>
+        <if test="image != null and image != '' ">
+            image = #{image},
+        </if>
+        <if test="name != null and name != '' ">
+            name = #{name},
+        </if>
+        <if test="num != null and num != '' ">
+            num = #{num},
+        </if>
+        <if test="purpose != null">
+            purpose = #{purpose},
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            create_time = #{createTime},
+        </if>
+    </set>
+    where id = #{id}
+    </update>
+
+
+    <!--查询全部-->
+    <select id="findAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from equips
+    order by create_time desc
+    </select>
+
+
+    <!--按照Map条件查询-->
+    <select id="queryFilter" resultType="com.mty.stadium.model.Equips" parameterType="map">
+        SELECT
+        e.id,
+        e.cid,
+        e.image,
+        e.name,
+        e.num,
+        e.purpose,
+        e.create_time createTime,
+        c.name cname
+        FROM equips e left join category c on e.cid = c.id
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and e.id = #{id}
+        </if>
+        <if test="cid != null and cid != '' ">
+            and e.cid = #{cid}
+        </if>
+        <if test="name != null and name != '' ">
+            and e.name like concat(concat('%',#{name}),'%')
+        </if>
+        <if test="num != null and num != '' ">
+            and e.num = #{num}
+        </if>
+        <if test="purpose != null and purpose != '' ">
+            and e.purpose = #{purpose}
+        </if>
+        <if test="createTime != null and createTime != '' ">
+            and e.create_time = #{createTime}
+        </if>
+        order by e.create_time desc
+        <if test="limit==1">
+            limit 0,5
+        </if>
+    </select>
+
+</mapper>

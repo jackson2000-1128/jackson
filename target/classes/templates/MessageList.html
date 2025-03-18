@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <base th:href="${#request.getContextPath()}+'/'">
+    <link rel="stylesheet" href="static/layui/css/layui.css"  media="all">
+</head>
+<style>
+    .searchdiv{
+        background: #fff;
+        border-radius: 6px;margin-top: 10px;
+        box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+        padding: 10px;
+    }
+    .layui-layer-shade{
+        background-color:unset !important;
+    }
+</style>
+
+<body style="background-color: #f3f3f4;">
+    <div class="searchdiv">
+        <form class="layui-form" id="searhFrom">
+            <div class="layui-row layui-form-item">
+
+                <div class="layui-col-xs3">
+                    <label class="layui-form-label">反馈内容：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="content" placeholder="请输入反馈内容" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-col-xs3" style="padding-left:20px; ">
+                    <button type="button" class="layui-btn" id="btn_query">查询</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="searchdiv">
+        <th:block th:if="${session.type != '01'}">
+            <button class="layui-btn layui-btn-normal" id="addInfo">反馈</button>
+        </th:block>
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+    </div>
+
+
+    <div id="addModel" style="display: none">
+        <form class="layui-form" id="addform" style="padding: 15px 30px 15px 0px;" action="">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">反馈内容:</label>
+                <div class="layui-input-block">
+                    <textarea name="content" lay-verify="required" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" lay-submit="" lay-filter="addSubmit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div id="editModel" style="display: none">
+        <form class="layui-form" id="editform" style="padding: 15px 30px 15px 0px;" action="">
+
+            <input type="hidden" name="id" id="id">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">反馈内容:</label>
+                <div class="layui-input-block">
+                    <textarea name="content" id="content" lay-verify="required" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="editSubmit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+
+    <div id="hfModel" style="display: none">
+        <form class="layui-form" id="hfform" style="padding: 15px 30px 15px 0px;" action="">
+
+            <input type="hidden" name="id" id="hid">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">回复内容:</label>
+                <div class="layui-input-block">
+                    <textarea name="reply" id="reply" lay-verify="required" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="hfSubmit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+<script src="static/layui/layui.all.js" charset="utf-8"></script>
+<script>
+
+    !function(){
+        var table = layui.table;
+        var $ = layui.jquery,layer = layui.layer;
+        var form = layui.form;
+
+
+        //第一个实例
+        var tableIns = table.render({
+            elem: '#test'
+            ,height: 500
+            ,where: {}
+            ,url: '/message/list' //数据接口
+            ,page: true //开启分页
+            ,cols: [
+                [ //表头
+                    {field: 'uname', title: '用户', fixed: 'center'},
+                    {field: 'content', title: '反馈内容', fixed: 'center'},
+                    {field: 'reply', title: '回复内容', fixed: 'center',
+                        templet:function (d) {
+                            if(d.reply==null || d.reply==""){
+                                return "暂未回复";
+                            }else{
+                                return d.reply;
+                            }
+                        }
+                    },
+                    {field: 'createTime', title: '发布时间', fixed: 'center'},
+                    {fixed: 'right', title:'操作', width:230,
+                        templet:function (d) {
+                            var type= '[[${session.type}]]';
+                            if(type=="01"){
+                                let del = '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
+                                let edit = '<a class="layui-btn layui-btn-xs" lay-event="hf">回复</a>';
+                                return edit+del;
+                            }else{
+                                let del = '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
+                                let edit = '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
+                                return edit+del;
+                            }
+
+                        }
+                    }
+                ]
+            ]
+        });
+
+        /**
+         * 查询按钮事件
+         * **/
+        $("#btn_query").click(function(){
+            tableIns.reload({
+                where:{
+                    //对应查询条件
+                      uid:$("input[name=uid]").val(),
+                      content:$("input[name=content]").val(),
+                      reply:$("input[name=reply]").val(),
+                },page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            })
+        });
+
+        /**
+         * 监听表格操作
+         *
+         * **/
+        var editwindow ;
+        var hfwindow ;
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                top.layer.confirm('确定要删除吗', function(index){
+                    $.ajax({
+                        url:"/message/del",
+                        type:"post",
+                        data:{id:data.id},
+                        success:function(data){
+                            if(data.ret){
+                                obj.del();
+                                parent.layer.close(index);
+                                parent.layer.msg("删除成功!")
+                            }
+                        }
+                    })
+
+                });
+            } else if(obj.event === 'edit'){
+
+                $.ajax({
+                    url: '/message/edit?id='+data.id,
+                    type: "get",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    success:function(res){
+                        editwindow = layer.open({
+                            type:1,
+                            area: ['500px', '300px'],
+                            content:$("#editModel"),
+                            success: function() { }
+                        });
+                        document.getElementById("id").value = res.id;
+                        document.getElementById("content").value = res.content;
+                        form.render('select');
+                        layui.form.on('submit(editSubmit)', function(data){
+                            $.ajax({
+                                url:"/message/edit",
+                                type:"post",
+                                dataType:"json",
+                                data: $("#editform").serialize(),
+                                success:function(data){
+                                    parent.layer.msg(data.msg);
+                                    if(data.ret){
+                                        layer.close(editwindow);
+                                        tableIns.reload({
+                                            where: {}
+                                            ,page: {
+                                                curr: 1 //重新从第 1 页开始
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    },
+                    error:function(){
+                        layer.msg('获取失败',{icon:0,time:3000});
+                    }
+                });
+
+            } else if(obj.event === 'hf'){
+                $.ajax({
+                    url: '/message/edit?id='+data.id,
+                    type: "get",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    success:function(res){
+                        hfwindow = layer.open({
+                            type:1,
+                            area: ['500px', '300px'],
+                            content:$("#hfModel"),
+                            success: function() { }
+                        });
+                        document.getElementById("hid").value = res.id;
+                        document.getElementById("reply").value = res.reply;
+                        form.render('select');
+                        layui.form.on('submit(hfSubmit)', function(data){
+                            $.ajax({
+                                url:"/message/edit",
+                                type:"post",
+                                dataType:"json",
+                                data: $("#hfform").serialize(),
+                                success:function(data){
+                                    parent.layer.msg(data.msg);
+                                    if(data.ret){
+                                        layer.close(hfwindow);
+                                        tableIns.reload({
+                                            where: {}
+                                            ,page: {
+                                                curr: 1 //重新从第 1 页开始
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    },
+                    error:function(){
+                        layer.msg('获取失败',{icon:0,time:3000});
+                    }
+                });
+
+            }
+        });
+
+
+        /**
+        *  反馈单击事件  addModel 模态框的局部变量 方便下面引用
+        * */
+        var addModel;
+        $("#addInfo").click(function(){
+            addModel = layer.open({
+                type: 1,
+                area: ['500px', '300px'],
+                content: $('#addModel'),
+                success:function(){
+                    layui.form.render();
+                }
+            });
+        });
+
+        /**
+         *  监听 添加提交按钮
+         */
+        layui.form.on('submit(addSubmit)', function(data){
+            $.ajax({
+                url:"/message/add",
+                type:"post",
+                dataType:"json",
+                data: $("#addform").serialize(),
+                success:function (data) {
+                    if(data.ret){
+                        parent.layer.msg("添加成功！");
+                        layer.close(addModel);
+                        tableIns.reload({
+                            where: {}
+                            ,page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                    }else{
+                        parent.layer.msg(data.msg)
+                    }
+                    window.location.href='/message/message';
+                },error:function(data){
+                    parent.layer.msg("出现错误");
+                }
+            })
+            return false;
+        });
+
+    }();
+</script>
+</body>
+
+</html>

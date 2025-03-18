@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <base th:href="${#request.getContextPath()}+'/'">
+    <link  th:href="@{static/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{static/font-awesome/css/font-awesome.css}" rel="stylesheet">
+    <link th:href="@{static/css/animate.css}" rel="stylesheet">
+    <link th:href="@{static/css/style.css}" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+
+
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div style="margin: 160px 0;">
+            <h3>高校场馆预约系统登录</h3>
+            <form class="m-t" role="form" id ="loginForm" >
+                <div class="form-group">
+                    <input type="username" name="username" class="form-control" placeholder="用户名" required="">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" placeholder="密码" required="">
+                </div>
+                <div class="form-group">
+                    <select id="type" name="type" class="form-control">
+                        <option value="01">管理员</option>
+                        <option value="02">校内用户</option>
+                        <option value="03">校外用户</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary block full-width m-b" id="loginBtn">登录</button>
+                <span id="LoginInfo" style="color: red; margin-left: 20px;" ></span>
+                <p class="text-muted text-center"><small>没有账号?</small></p>
+                <a class="btn btn-sm btn-white btn-block" href="/register">创建一个用户帐户</a>
+                <a href="/front/"><p style="margin-top: 20px;" class="text-muted text-center"><small>返回首页</small></p></a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="static/js/jquery-3.1.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#loginBtn").on("click",function(){
+                $.post({
+                   url:"/login",
+                   dataType:"json",
+                   data:$("#loginForm").serialize(),
+                   success:function(res){
+                       if(res=='200'){
+                           window.location.href = "/index";
+                       }else if(res=='201'){
+                           $("#LoginInfo").text("请确定账号是否正确！");
+                       }else if(res=='203'){
+                            window.location.href = "/front/";
+                       }else{
+                           $("#LoginInfo").text("请填写账号和密码！");
+                       }
+                   }
+                   })
+                });
+        })
+    </script>
+
+</body>
+
+</html>
