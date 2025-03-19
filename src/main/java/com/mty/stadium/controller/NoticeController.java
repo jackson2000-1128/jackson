@@ -3,7 +3,6 @@ package com.mty.stadium.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mty.stadium.model.Notice;
-import com.mty.stadium.model.User;
 import com.mty.stadium.service.NoticeService;
 import com.mty.stadium.util.JsonData;
 import com.mty.stadium.util.PageResultVo;
@@ -17,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/notice")
+@RequestMapping(value="/notice")
 public class NoticeController {
         @Autowired
         private NoticeService noticeService;
@@ -42,7 +41,7 @@ public class NoticeController {
     /**编辑详情*/
     @GetMapping("/edit")
     @ResponseBody
-    public Notice edit(Model model, Integer id){return noticeService.selectById(id);}
+    public Notice edit(Model model, String id){return noticeService.selectById(id);}
 
 
     /**编辑*/

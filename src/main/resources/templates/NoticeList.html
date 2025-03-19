@@ -111,10 +111,10 @@
             ,page: true //开启分页
             ,cols: [
                 [ //表头
-                    {field: 'id', title: '编号', fixed: 'center'},
+                    // {field: 'id', title: '编号', fixed: 'center'},
                     {field: 'title', title: '标题', fixed: 'center'},
                     {field: 'content', title: '内容', fixed: 'center'},
-                    {field: 'create_time', title: '创建时间', fixed: 'center'},
+                    {field: 'createTime', title: '创建时间', fixed: 'center'},
                     {fixed: 'right', title:'操作', width:230,
                         templet:function (d) {
                             let del = '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
@@ -134,7 +134,7 @@
                 where:{
                     //对应查询条件
                     title:$("input[name=title]").val(),
-                    // content:$("input[name=content]").val(),
+                    content:$("input[name=content]").val(),
                 },page: {
                     curr: 1 //重新从第 1 页开始
                 }

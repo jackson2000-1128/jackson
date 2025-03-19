@@ -37,7 +37,7 @@ public interface NoticeMapper extends MyMapper<Notice> {
     /**
      * 根据ID查询
      */
-    Notice selectById(@Param("id") Integer id);
+    Notice selectById(String id);
 
     /**
      * 根据参数查询列表

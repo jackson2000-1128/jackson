@@ -49,7 +49,7 @@ public class NoticeService {
     /**
      * 根据id查询信息
      */
-    public Notice selectById(Integer id) {
+    public Notice selectById(String id) {
         return noticeMapper.selectById(id);
     }
 
