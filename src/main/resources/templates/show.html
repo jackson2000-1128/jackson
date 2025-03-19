@@ -80,6 +80,25 @@
     </div>
 </div>
 
+<div id="notice-board">
+    <h2>通知公告</h2>
+    <ul id="notice-list"></ul>
+</div>
+<script>
+    $(document).ready(function () {
+// 加载通知公告
+        $.get("/notice/list", function (data) {
+            if (data.ret) {
+                var noticeList = $("#notice-list");
+                data.data.forEach(function (notice) {
+                    var li = $("<li></li>");
+                    li.text(notice.title);
+                    noticeList.append(li);
+                });
+            }
+        });
+    });
+</script>
 
 <section  class="container features" >
     <div class="row">

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mty.stadium.mapper.NoticeMapper" >
+
+    <resultMap id="BaseResultMap" type="com.mty.stadium.model.Notice">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        title,
+        content,
+        create_time
+    </sql>
+
+    <!--条件查询-->
+    <select id="selectByCondition" resultMap="BaseResultMap" parameterType="com.mty.stadium.model.Notice">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM notice
+        WHERE 1=1
+        <if test="id != null and id != '' ">
+            and id = #{id}
+        </if>
+        <if test="title != null and title != '' ">
+            and title like concat(concat('%',#{title}),'%')
+        </if>
+        <if test="content != null and content != '' ">
+            and content = #{content}
+        </if>
+        <if test="create_time != null and create_time != '' ">
+            and create_time = #{create_time}
+        </if>
+        order by create_time desc
+    </select>
+
+
+    <!--添加-->
+    <insert id="addByCondition" parameterType="com.mty.stadium.model.Notice" keyProperty="id" useGeneratedKeys="true">
+        insert into notice (
+            id,
+            title,
+            content,
+            create_time
+        )values(
+                   #{id},
+                   #{title},
+                   #{content},
+                   #{create_time}
+               )
+    </insert>
+
+
+    <!--根据id删除-->
+    <delete id="deleteById" >
+        delete from notice where id=#{id}
+    </delete>
+
+
+    <!--根据title查询-->
+    <select id="selectById" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from notice where title=#{title}
+    </select>
+
+
+    <!--修改-->
+    <update id="updateById" parameterType="com.mty.stadium.model.Notice">
+        update notice
+        <set>
+            <if test="title != null and title != '' ">
+                title = #{title},
+            </if>
+            <if test="content != null and content != '' ">
+                content = #{content},
+            </if>
+            <if test="create_time != null and create_time != '' ">
+                create_time = #{create_time},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <!--查询全部-->
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from notice
+        order by create_time desc
+    </select>
+
+
+    <!--按照Map条件查询-->
+    <select id="queryFilter" resultMap="BaseResultMap" parameterType="map">
+        select
+        <include refid="Base_Column_List" />
+        from notice
+        where 1=1
+        <if test="id != null and id != '' ">
+            and id = #{id}
+        </if>
+        <if test="title != null and title != '' ">
+            and title = #{title}
+        </if>
+        <if test="content != null and content != '' ">
+            and content = #{content}
+        </if>
+        <if test="create_time != null and create_time != '' ">
+            and create_time = #{create_time}
+        </if>
+        order by create_time desc
+    </select>
+
+</mapper>
