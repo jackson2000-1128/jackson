@@ -4,7 +4,7 @@
 <div class="navbar-wrapper" th:fragment="topbar">
     <nav class="navbar navbar-default navbar-fixed-top navbar-expand-md navbar-scroll" role="navigation">
         <div class="container">
-            <a href="front/" style="font-size: 24px;font-weight: 600;color: #676a84;">高校场馆预订系统</a>
+            <a href="front/" style="font-size: 24px;font-weight: 600;color: #676a84;">高校运动场馆预约系统</a>
             <div class="navbar-header page-scroll">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
                     <i class="fa fa-bars"></i>
@@ -15,6 +15,7 @@
                     <li id="category"><a class="nav-link page-scroll" href="/front/">首页</a></li>
                     <li><a class="nav-link page-scroll" href="/front/site">场地</a></li>
                     <li><a class="nav-link page-scroll" href="/front/equip">器材</a></li>
+                    <li><a class="nav-link page-scroll" href="/front/notice">通知公告</a></li>
                     <th:block th:if="${session.userInfo!=null}">
                         <li><a class="nav-link page-scroll" href="/index">个人中心</a></li>
                         <li><a class="nav-link page-scroll" href="/logout">退出</a></li>
