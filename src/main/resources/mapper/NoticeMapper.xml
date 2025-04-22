@@ -49,7 +49,7 @@
 --                    #{id},
                    #{title},
                    #{content},
-                   #{create_time}
+                   #{createTime}
                )
     </insert>
 

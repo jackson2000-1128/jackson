@@ -3,11 +3,9 @@ package com.mty.stadium.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mty.stadium.model.Equips;
+import com.mty.stadium.model.Notice;
 import com.mty.stadium.model.Sites;
-import com.mty.stadium.service.ApplyService;
-import com.mty.stadium.service.EquipsService;
-import com.mty.stadium.service.SitesService;
-import com.mty.stadium.service.UserService;
+import com.mty.stadium.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +29,8 @@ public class FrontController {
     private ApplyService applyService;
     @Autowired
     private EquipsService equipsService;
-
+    @Autowired
+    private NoticeService noticeService;
 
     //首页
     @GetMapping("/")
@@ -40,10 +39,43 @@ public class FrontController {
         mp.put("limit","1");
         List<Sites> sitesList = sitesService.queryFilter(mp);
         List<Equips> equipsList = equipsService.queryFilter(mp);
+        List<Notice> noticeList = noticeService.queryFilter(mp);
         model.addAttribute("sitesList",sitesList);
         model.addAttribute("equipsList",equipsList);
+        model.addAttribute("noticeList",noticeList);
         return "show";
     }
+
+
+    //通知公告
+    @GetMapping("/notice")
+    public String notice(Model model, String searchName, Integer pageNum, Integer pageSize){
+        Map mp = new HashMap<>();
+        mp.put("name",searchName);
+        //mp.put("status","01");
+        if(pageNum==null){
+            pageNum =1;
+        }
+        if(pageSize==null){
+            pageSize =8;
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        List<Notice> noticeList = noticeService.queryFilter(mp);
+        PageInfo<Notice> notice = new PageInfo<>(noticeList);
+        model.addAttribute("notice",notice);
+        model.addAttribute("searchName",searchName);
+        return "notice";
+    }
+
+    //通知公告详情
+    @GetMapping("/noticeDetail")
+    public String noticeDetail(String id, Model model){
+        Notice notice = noticeService.selectById(id);
+        model.addAttribute("id",id);
+        model.addAttribute("notice",notice);
+        return "noticeDetail";
+    }
+
 
 
     //场地
