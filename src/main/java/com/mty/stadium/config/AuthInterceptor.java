@@ -12,7 +12,13 @@ import javax.servlet.http.HttpSession;
  **/
 public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Override
+
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (response.isCommitted()) {
+            // 响应已提交，无法创建会话，直接拦截请求
+            return false;
+        }
+
         HttpSession session = request.getSession();
         if(session.getAttribute("userInfo") != null){
             return true;

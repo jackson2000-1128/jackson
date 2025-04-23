@@ -107,18 +107,18 @@
     var $ = layui.jquery,layer = layui.layer;
   });
 
-  // function purchaseInfo() {
-  //   let nid = '[[${id}]]';
-  //   let content = '[[${notice.content}]]';
-  //   let num = document.getElementById("num").value;
-  //   if(num==null || num==''){
-  //     parent.layer.msg("请选择数量！");
-  //     return;
-  //   }
-  //   if(parseInt(num)>parseInt(knum)){
-  //     parent.layer.msg("器材数量不足！");
-  //     return;
-  //   }
+  function purchaseInfo() {
+    let nid = '[[${id}]]';
+    let content = '[[${notice.content}]]';
+    let num = document.getElementById("num").value;
+    if(num==null || num==''){
+      parent.layer.msg("请选择数量！");
+      return;
+    }
+    if(parseInt(num)>parseInt(knum)){
+      parent.layer.msg("器材数量不足！");
+      return;
+    }
     $.ajax({
       url:"/leases/add",
       type:"post",
