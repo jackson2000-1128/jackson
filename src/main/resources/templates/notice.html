@@ -67,8 +67,9 @@
               </a>
             </div>
             <div class="file-name" style="color: #f8ac5a;">
-              发布时间：[[${notice.createTime}]]
-              <div class="fubiaoti"><small>发布内容：[[${notice.content}]]</small></div>
+              发布时间：[[${#dates.format(notice.createTime, 'yyyy-MM-dd HH:mm:ss')}]]
+<!--              发布时间：[[${notice.createTime}]]-->
+              <div class="fubiaoti">发布内容：[[${notice.content}]]</div>
             </div>
           </div>
         </div>

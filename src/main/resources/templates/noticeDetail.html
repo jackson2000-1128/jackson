@@ -57,7 +57,8 @@
               <h2 class="font-bold m-b-xs" th:text="${notice.title}"></h2>
               <hr>
                 <dl class="small m-t-md" >
-                    <dd th:text="${'发布时间：'+#dates.format(notice.createTime, 'yyyy-MM-dd HH:mm:ss')}"></dd>
+                  <dd th:text="${'发布时间：'+#dates.format(notice.createTime, 'yyyy-MM-dd HH:mm:ss')}"></dd>
+<!--                    <dd th:text="${'发布时间：'+#dates.format(notice.createTime, 'yyyy-MM-dd HH:mm:ss')}"></dd>-->
                 </dl>
 <!--              <h4 style="margin-top: 30px;" th:text="'发布时间：'+${notice.createTime}"></h4>-->
               <h4 style="margin-top: 30px;" th:text="'发布内容：'+${notice.content}"></h4>
