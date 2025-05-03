@@ -72,5 +72,14 @@ public class SitesService {
     }
 
 
+    public List<Sites> queryAvailableSites(String type, String applyDate, String applyTime) {
+        Map<String, Object> mp = new HashMap<>();
+        mp.put("applyDate", applyDate);
+        mp.put("applyTime", applyTime);
+        if (type.equals("03")) {
+            mp.put("excludeType", "02"); // 排除校内用户已预约的场地
+        }
+        return sitesMapper.queryAvailableSites(mp);
+    }
 
 }

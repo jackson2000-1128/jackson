@@ -16,6 +16,7 @@
         sid,
         uid,
         apply_date,
+        apply_time,
         status,
         create_time
     </sql>
@@ -27,6 +28,7 @@
         a.sid,
         a.uid,
         a.apply_date applyDate,
+        a.apply_time applyTime,
         a.status,
         a.create_time createTime,
         sd.name sdname,
@@ -49,6 +51,9 @@
         <if test="applyDate != null and applyDate != '' ">
             and a.apply_date = #{applyDate}
         </if>
+        <if test="applyTime != null and applyTime != '' ">
+            and a.apply_time = #{applyTime}
+        </if>
         <if test="status != null and status != '' ">
             and a.status = #{status}
         </if>
@@ -65,12 +70,14 @@
         sid,
         uid,
         apply_date,
+        apply_time,
         status,
         create_time
     )values(
         #{sid},
         #{uid},
         #{applyDate},
+        #{applyTime},
         #{status},
         #{createTime}
     )
@@ -104,6 +111,9 @@
         <if test="applyDate != null and applyDate != '' ">
             apply_date = #{applyDate},
         </if>
+        <if test="applyDate != null and applyDate != '' ">
+            apply_time = #{applyTime},
+        </if>
         <if test="status != null and status != '' ">
             status = #{status},
         </if>
@@ -131,6 +141,7 @@
         a.sid,
         a.uid,
         a.apply_date applyDate,
+        a.apply_time applyTime,
         a.status,
         a.create_time createTime,
         sd.name sdname,
@@ -152,6 +163,9 @@
         </if>
         <if test="dingshi != null and dingshi != '' ">
             and a.apply_date &lt; #{dingshi}
+        </if>
+        <if test="applyTime != null and applyTime != '' ">
+            and a.apply_time = #{applyTime}
         </if>
         <if test="status != null and status != '' ">
             and a.status = #{status}

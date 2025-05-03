@@ -48,4 +48,5 @@ public interface SitesMapper extends MyMapper<Sites> {
      */
     List<Sites> queryFilter(Map mp);
 
+    List<Sites> queryAvailableSites(Map<String, Object> mp);
 }
