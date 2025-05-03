@@ -67,14 +67,24 @@ public class ConfinesController {
     @PostMapping("/edit")
     @ResponseBody
     public JsonData edit(Confines confines){
+        if (confines == null || confines.getSid() == null || confines.getApplyDate() == null) {
+            return JsonData.fail("参数不完整，请检查输入！");
+        }
         Map mp = new HashMap();
         mp.put("sid",confines.getSid());
         List<Confines> confinesList = confinesService.queryFilter(mp);
-        for(int i=0;i<confinesList.size();i++){
-            if(confinesList.get(i).getApplyDate().equals(confines.getApplyDate())){
-                return JsonData.fail("该场地该时间段已添加，请勿重复添加！");
+        if (confinesList != null && !confinesList.isEmpty()) {
+            for (Confines item : confinesList) {
+                if (item.getApplyDate() != null && item.getApplyDate().equals(confines.getApplyDate())) {
+                    return JsonData.fail("该场地该时间段已添加，请勿重复添加！");
+                }
             }
         }
+//        for(int i=0;i<confinesList.size();i++){
+//            if(confinesList.get(i).getApplyDate().equals(confines.getApplyDate())){
+//                return JsonData.fail("该场地该时间段已添加，请勿重复添加！");
+//            }
+//        }
         int a = confinesService.updateById(confines);
         if (a > 0) {
           return JsonData.success(null,"编辑成功！");
@@ -118,4 +128,13 @@ public class ConfinesController {
         }
     }
 
+//    @PostMapping("/add")
+//    public String add(@RequestBody Confines confines) {
+//        int num = confinesService.addByCondition(confines);
+//        if (num > 0) {
+//            return "限制规则添加成功";
+//        } else {
+//            return "限制规则添加失败";
+//        }
+//    }
 }

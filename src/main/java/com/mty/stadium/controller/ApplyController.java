@@ -132,6 +132,20 @@ public class ApplyController {
                 }
             }
         }
+
+        // 检查校内用户是否已经预约该时段
+        if (type.equals("03")) {
+            Map<String, Object> mp = new HashMap<>();
+            mp.put("sid", apply.getSid());
+            mp.put("applyDate", apply.getApplyDate());
+            mp.put("applyTime", apply.getApplyTime());
+            mp.put("type", "02"); // 只查询校内用户的预约
+            List<Apply> applies = applyService.queryFilter(mp);
+            if (applies.size() > 0) {
+                return JsonData.fail("该时段已被校内用户预约，请选择其他时间段！");
+            }
+        }
+
         Map mp = new HashMap();
         mp.put("sid",apply.getSid());
         mp.put("applyDate",apply.getApplyDate());

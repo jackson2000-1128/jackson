@@ -132,6 +132,30 @@
 <script src="static/layui/layui.all.js" charset="utf-8"></script>
 <script>
     $(function(){
+        $("#reserveBtn").on("click", function () {
+            var applyDate = $("#applyDate").val();
+            var applyTime = $("#applyTime").val();
+            var sid = $("#sid").val();
+            $.post({
+                url: "/apply/add",
+                dataType: "json",
+                data: {
+                    applyDate: applyDate,
+                    applyTime: applyTime,
+                    sid: sid
+                },
+                success: function (res) {
+                    if (res === "该时段已被校内用户预约，请选择其他时间段！") {
+                        alert(res);
+                    } else if (res === "预约成功") {
+                        alert("预约成功");
+                        window.location.reload();
+                    } else {
+                        alert(res);
+                    }
+                }
+            });
+        });
         var $ = layui.jquery,layer = layui.layer;
     });
 

@@ -179,4 +179,25 @@
         </if>
     </select>
 
+
+<!--    校内外用户优先级-->
+        <select id="queryAvailableSites" resultType="com.mty.stadium.model.Sites">
+            SELECT s.*
+            FROM sites s
+            WHERE s.id NOT IN (
+            SELECT DISTINCT sid
+            FROM apply a
+            WHERE a.apply_date = #{applyDate}
+            AND a.apply_time = #{applyTime}
+            <if test="excludeType != null">
+                AND EXISTS (
+                SELECT 1
+                FROM user u
+                WHERE u.id = a.uid
+                AND u.type = #{excludeType}
+                )
+            </if>
+            )
+        </select>
+
 </mapper>
