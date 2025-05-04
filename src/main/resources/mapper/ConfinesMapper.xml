@@ -5,7 +5,8 @@
     <resultMap id="BaseResultMap" type="com.mty.stadium.model.Confines">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="sid" jdbcType="VARCHAR" property="sid" />
-        <result column="apply_date" jdbcType="VARCHAR" property="applyDate" />
+        <result column="apply_date" jdbcType="DATE" property="applyDate" />
+        <result column="apply_time" jdbcType="VARCHAR" property="applyTime" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     </resultMap>
 
@@ -13,6 +14,7 @@
         id,
         sid,
         apply_date,
+        apply_time,
         create_time
     </sql>
 
@@ -22,6 +24,7 @@
         c.id,
         c.sid,
         c.apply_date applyDate,
+        c.apply_time applyTime,
         c.create_time createTime,
         sd.name sdname,
         s.name sname
@@ -39,6 +42,9 @@
         <if test="applyDate != null and applyDate != '' ">
             and c.apply_date = #{applyDate}
         </if>
+        <if test="applyTime != null and applyTime != '' ">
+            and c.apply_time = #{applyTime}
+        </if>
         <if test="createTime != null and createTime != '' ">
             and c.create_time = #{createTime}
         </if>
@@ -51,10 +57,12 @@
     insert into confines (
         sid,
         apply_date,
+        apply_time,
         create_time
     )values(
         #{sid},
         #{applyDate},
+        #{applyTime},
         #{createTime}
     )
     </insert>
@@ -84,6 +92,9 @@
         <if test="applyDate != null and applyDate != '' ">
             apply_date = #{applyDate},
         </if>
+        <if test="applyTime != null and applyTime != '' ">
+            apply_time = #{applyTime},
+        </if>
         <if test="createTime != null and createTime != '' ">
             create_time = #{createTime},
         </if>
@@ -107,6 +118,7 @@
         c.id,
         c.sid,
         c.apply_date applyDate,
+        c.apply_time applyTime,
         c.create_time createTime,
         sd.name sdname,
         s.name sname
@@ -120,6 +132,9 @@
         </if>
         <if test="applyDate != null and applyDate != '' ">
             and c.apply_date = #{applyDate}
+        </if>
+        <if test="applyTime != null and applyTime != '' ">
+            and c.apply_time = #{applyTime}
         </if>
         <if test="createTime != null and createTime != '' ">
             and c.create_time = #{createTime}

@@ -6,6 +6,7 @@ public class Confines{
     private Integer id;
     private String sid;
     private String applyDate;
+    private String applyTime;
     private java.util.Date createTime;
 
     private String sdname;
@@ -44,6 +45,12 @@ public class Confines{
     }
     public String getApplyDate() {
        return this.applyDate;
+    }
+    public void setApplyTime(String applyTime) {
+        this.applyTime = applyTime;
+    }
+    public String getApplyTime() {
+        return applyTime;
     }
     public void setCreateTime(java.util.Date value) {
         this.createTime = value;

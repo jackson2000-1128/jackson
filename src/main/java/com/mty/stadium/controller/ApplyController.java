@@ -127,7 +127,7 @@ public class ApplyController {
             mp.put("sid",apply.getSid());
             List<Confines> all = confinesService.queryFilter(mp);
             for(int i=0;i<all.size();i++){
-                if(all.get(i).getApplyDate().equals(apply.getApplyDate())){
+                if(all.get(i).getApplyDate().equals(apply.getApplyDate()) && all.get(i).getApplyTime().equals(apply.getApplyTime())){
                     return JsonData.fail("该场地该时段只能校内用户预约！");
                 }
             }
