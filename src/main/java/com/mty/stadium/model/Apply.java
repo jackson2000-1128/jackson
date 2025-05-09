@@ -14,6 +14,7 @@ public class Apply{
     private String sdname;
     private String sname;
     private String uname;
+    private String utype;
 
     public String getSdname() {
         return sdname;
@@ -39,6 +40,9 @@ public class Apply{
         this.uname = uname;
     }
 
+    public String getUtype() { return utype; }
+
+    public void setUtype(String utype) { this.utype = utype; }
     public void setId(Integer value) {
         this.id = value;
     }

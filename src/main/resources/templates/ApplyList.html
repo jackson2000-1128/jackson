@@ -64,18 +64,31 @@
                     {field: 'sdname', title: '场馆', fixed: 'center'},
                     {field: 'sname', title: '场地', fixed: 'center'},
                     {field: 'uname', title: '用户', fixed: 'center'},
+                    {field: 'utype', title: '类型', fixed: 'center',
+                        templet:function (d) {
+                            if(d.utype=='02'){
+                                return '<button type="button" class="layui-btn layui-btn-normal layui-btn-xs">校内用户</button>';
+                            }
+                            if(d.utype=='03'){
+                                return '<button type="button" class="layui-btn layui-btn-warning layui-btn-xs">校外用户</button>';
+                            }
+                        }
+                    },
                     {field: 'applyDate', title: '预约日期', fixed: 'center'},
                     {field: 'applyTime', title: '预约时间段', fixed: 'center'},
                     {field: 'status', title: '状态', fixed: 'center',
                         templet:function (d) {
                             if(d.status=='01'){
-                                return '<button type="button" class="layui-btn layui-btn-normal layui-btn-xs">已预约</button>';
+                                return '<button type="button" class="layui-btn layui-btn-normal layui-btn-xs">已通过</button>';
                             }
                             if(d.status=='02'){
                                 return '<button type="button" class="layui-btn layui-btn-warning layui-btn-xs">已取消</button>';
                             }
                             if(d.status=='03'){
-                                return '<button type="button" class="layui-btn layui-btn-danger layui-btn-xs">已过期</button>';
+                                return '<button type="button" class="layui-btn layui-btn-danger layui-btn-xs">未通过</button>';
+                            }
+                            if(d.status=='04'){
+                                return '<button type="button" class="layui-btn layui-btn-normal layui-btn-xs">审核中</button>';
                             }
                         }
                     },
@@ -84,8 +97,9 @@
                         templet:function (d) {
                             var type= '[[${session.type}]]';
                             if(type=="01"){
+                                let edit = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">审核</a>';
                                 let del = '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
-                                return del;
+                                return edit+del;
                             }else{
                                 if(d.status=='01'){
                                     let quxiao = '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="quxiao">取消预约</a>';
@@ -159,12 +173,70 @@
                             }
                         }
                     })
-
+                });
+            }else if (obj.event === 'edit') {
+                layer.open({
+                    type: 1,
+                    title: '请选择审核结果',
+                    content: '<div style="padding: 20px;">' +
+                        '<button class="layui-btn layui-btn-normal" id="approveBtn">通过审核</button>' +
+                        '<button class="layui-btn layui-btn-danger" id="rejectBtn">不通过审核</button>' +
+                        '</div>',
+                    btnAlign: 'c',
+                    shade: 0.3,
+                    yes: function(index, layero) {
+                        // 这里可以不做实际操作，因为我们使用自定义按钮
+                    },
+                    cancel: function(index, layero) {
+                        layer.close(index);
+                    }
+                });
+                // 为通过审核按钮绑定点击事件
+                $('#approveBtn').click(function() {
+                    var status = '01';
+                    $.ajax({
+                        url: "/apply/edit",
+                        type: "post",
+                        dataType: "json",
+                        data: {"id": data.id, "status": status},
+                        success: function(data) {
+                            if (data.ret) {
+                                parent.layer.msg('审核通过成功');
+                                tableIns.reload({
+                                    where: {},
+                                    page: {
+                                        curr: 1 // 重新从第 1 页开始
+                                    }
+                                });
+                                layer.closeAll();
+                            }
+                        }
+                    });
+                });
+                // 为不通过审核按钮绑定点击事件
+                $('#rejectBtn').click(function() {
+                    var status = '03'; // 假设不通过审核的状态码为 03
+                    $.ajax({
+                        url: "/apply/edit",
+                        type: "post",
+                        dataType: "json",
+                        data: {"id": data.id, "status": status},
+                        success: function(data) {
+                            if (data.ret) {
+                                parent.layer.msg('审核不通过成功');
+                                tableIns.reload({
+                                    where: {},
+                                    page: {
+                                        curr: 1 // 重新从第 1 页开始
+                                    }
+                                });
+                                layer.closeAll();
+                            }
+                        }
+                    });
                 });
             }
         });
-
-
     }();
 </script>
 </body>

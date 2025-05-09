@@ -55,10 +55,19 @@
                     </select>
                 </div>
             </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">日期:</label>
+                <div class="layui-input-block">
+                    <!-- 日期选择框 -->
+                    <input type="date" name="applyDate" id="applyDate" class="form-control" lay-verify="required"  min="[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]">
+                </div>
+            </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">时间段:</label>
                 <div class="layui-input-block">
-                    <select name="applyDate" class="form-control" lay-verify="required">
+                    <select name="applyTime" class="form-control" lay-verify="required">
                         <option value="8:00-10:00">8:00-10:00</option>
                         <option value="10:00-12:00">10:00-12:00</option>
                         <option value="12:00-14:00">12:00-14:00</option>
@@ -93,10 +102,19 @@
                     </select>
                 </div>
             </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">日期:</label>
+                <div class="layui-input-block">
+                    <!-- 日期选择框 -->
+                    <input type="date" name="applyDate" id="applyDate" class="form-control" lay-verify="required"  min="[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]">
+                </div>
+            </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">时间段:</label>
                 <div class="layui-input-block">
-                    <select name="applyDate" id="applyDate" class="form-control" lay-verify="required">
+                    <select name="applyTime" id="applyTime" class="form-control" lay-verify="required">
                         <option value="8:00-10:00">8:00-10:00</option>
                         <option value="10:00-12:00">10:00-12:00</option>
                         <option value="12:00-14:00">12:00-14:00</option>
@@ -138,7 +156,8 @@
                 [ //表头
                     {field: 'sdname', title: '场馆', fixed: 'center'},
                     {field: 'sname', title: '场地', fixed: 'center'},
-                    {field: 'applyDate', title: '时间段', fixed: 'center'},
+                    {field: 'applyDate', title: '日期', fixed: 'center'},
+                    {field: 'applyTime', title: '时间段', fixed: 'center'},
                     {field: 'createTime', title: '创建时间', fixed: 'center'},
                     {fixed: 'right', title:'操作', width:230,
                         templet:function (d) {
@@ -206,6 +225,7 @@
                         document.getElementById("id").value = res.id;
                         document.getElementById("sid").value = res.sid;
                         document.getElementById("applyDate").value = res.applyDate;
+                        document.getElementById("applyTime").value = res.applyTime;
                         form.render('select');
                         layui.form.on('submit(editSubmit)', function(data){
                             $.ajax({
