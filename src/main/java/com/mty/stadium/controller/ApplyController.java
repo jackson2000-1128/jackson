@@ -158,11 +158,22 @@ public class ApplyController {
         if(applies.size()>0){
             return JsonData.fail("该时段已预约，请选择其他时间段！");
         }
-        apply.setStatus("01");
+        // 根据用户类型设置预约状态
+        if (type.equals("03")) {
+            apply.setStatus("04"); // 校外用户预约状态设为审核中
+        } else {
+            apply.setStatus("01"); // 其他用户预约状态设为已通过
+        }
+//        apply.setStatus("01");
         apply.setCreateTime(date);
         int num = applyService.addByCondition(apply);
         if(num > 0){
-          return JsonData.success(null,"预约成功");
+//          return JsonData.success(null,"预约成功");
+            if (type.equals("03")) {
+                return JsonData.success(null, "已申请，等待审核");
+            } else {
+                return JsonData.success(null, "预约成功");
+            }
         }else {
           return JsonData.fail("预约失败");
         }
